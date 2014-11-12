@@ -18,6 +18,7 @@ public class AddActivity extends ActionBarActivity {
 	
 	Context context;	
 	SQLiteDatabase db;
+	String name1 = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,15 @@ public class AddActivity extends ActionBarActivity {
 		txtName = (EditText)findViewById(R.id.editText1);
 		txtAge = (EditText)findViewById(R.id.editText2);
 		context = getApplicationContext();
+		
+
+		Bundle extras = getIntent().getExtras();	
+
+		if (extras != null) {
+			name1 = extras.getString("name1");
+		}
+		
+		txtName.setText(name1);
 		
 		
 	}// end onCreate
@@ -46,7 +56,7 @@ public class AddActivity extends ActionBarActivity {
 			db.setLocale(Locale.getDefault());
 			String SQL;
 			SQL = "INSERT INTO person (name, age) VALUES "
-					+ "('" + name + "'," + 12 + ")";
+					+ "('" + name + "'," + age + ")";
 
 			db.execSQL(SQL);
 			db.close();		

@@ -17,8 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -35,38 +38,23 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		context = getApplicationContext();
 		mListview = (ListView) findViewById(R.id.listView1);
+		
+		mListview.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 
-		db = context.openOrCreateDatabase("test.db",
-				SQLiteDatabase.CREATE_IF_NECESSARY, null);
-		db.close();
-		
-		
-		
-		// ส่วนดึงข้อมูลจาก DB		
-		db = context.openOrCreateDatabase("db.db",
-				SQLiteDatabase.OPEN_READWRITE, null);
-			
-		
-		
-		db.setLocale(Locale.getDefault());
-		SQLiteCursor cur = (SQLiteCursor) db.rawQuery("select name from person", null);
-		
-		if(cur.getCount()>0){			
-			cur.moveToFirst();
-			do {
-				String res = cur.getString(0);	
-				mList.add(res);	
-			} while (cur.moveToNext());			
-		}
-		
-		
-		adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,mList);
-		mListview.setAdapter(adapter);
-		
-		// จบดึงข้อมูลจาก DB
-		
-		
-		db.close();
+				
+				String val =(String) parent.getItemAtPosition(position);
+				
+				Intent intent = new Intent(getApplicationContext(), AddActivity.class);
+				intent.putExtra("name1", val);
+				startActivity(intent);
+				
+				 
+			}
+		});
+
 	}// end oncreate
 	
 	public void AddPerson(View v){
@@ -96,6 +84,39 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		// ส่วนดึงข้อมูลจาก DB		
+				mList.clear();
+				db = context.openOrCreateDatabase("db.db",
+						SQLiteDatabase.OPEN_READWRITE, null);
+									
+				
+				db.setLocale(Locale.getDefault());
+				SQLiteCursor cur = (SQLiteCursor) db.rawQuery("select name from person", null);
+				
+				if(cur.getCount()>0){			
+					cur.moveToFirst();
+					do {
+						String res = cur.getString(0);	
+						mList.add(res);	
+					} while (cur.moveToNext());			
+				}
+				
+				
+				adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,mList);
+				mListview.setAdapter(adapter);
+				db.close();
+				
+				// จบดึงข้อมูลจาก DB		
+		
+		
+	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

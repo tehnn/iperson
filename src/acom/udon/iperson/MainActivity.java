@@ -64,25 +64,7 @@ public class MainActivity extends ActionBarActivity {
 
 	public void CopyDb(View v) {
 
-		// copy db.db จาก assests ไปที่ เพคดก0
-
-		String mPackage = context.getPackageName();
-		String DB_PATH = "/data/data/" + mPackage + "/databases/db.db";
-
-		OutputStream myOutput = null;
-		InputStream myInput = null;
-		try {
-			myInput = context.getAssets().open("db.db");
-
-			myOutput = new FileOutputStream(DB_PATH);
-			copyFile(myInput, myOutput);
-
-			Log.d(context.getPackageName(), "ตั้งค่าฐานข้อมูลสำเร็จ");
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		
 	}
 
 	@Override
@@ -132,6 +114,26 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		}
 		if (id == R.id.action_init_db) {
+			
+			// copy db.db จาก assests ไปที่ เพคดก0
+
+			String mPackage = context.getPackageName();
+			String DB_PATH = "/data/data/" + mPackage + "/databases/db.db";
+
+			OutputStream myOutput = null;
+			InputStream myInput = null;
+			try {
+				myInput = context.getAssets().open("db.db");
+
+				myOutput = new FileOutputStream(DB_PATH);
+				copyFile(myInput, myOutput);
+
+				Log.d(context.getPackageName(), "ตั้งค่าฐานข้อมูลสำเร็จ");
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 
 			return true;
 		}

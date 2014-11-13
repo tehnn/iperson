@@ -1,5 +1,6 @@
 package acom.udon.iperson;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
 	SQLiteDatabase db;
 	Context context;
 	ListView mListview;
-	
+
 	ArrayList<String> mList = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
 
@@ -38,26 +39,25 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		context = getApplicationContext();
 		mListview = (ListView) findViewById(R.id.listView1);
-		
+
 		mListview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
-				
-				String val =(String) parent.getItemAtPosition(position);
-				
-				Intent intent = new Intent(getApplicationContext(), AddActivity.class);
+				String val = (String) parent.getItemAtPosition(position);
+
+				Intent intent = new Intent(getApplicationContext(),
+						AddActivity.class);
 				intent.putExtra("name1", val);
 				startActivity(intent);
-				
-				 
+
 			}
 		});
 
 	}// end oncreate
-	
-	public void AddPerson(View v){
+
+	public void AddPerson(View v) {
 		Intent intent = new Intent(context, AddActivity.class);
 		startActivity(intent);
 	}
@@ -84,58 +84,75 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 	}
-	
+
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
-		// ส่วนดึงข้อมูลจาก DB		
-				mList.clear();
-				db = context.openOrCreateDatabase("db.db",
-						SQLiteDatabase.OPEN_READWRITE, null);
-									
-				
-				db.setLocale(Locale.getDefault());
-				SQLiteCursor cur = (SQLiteCursor) db.rawQuery("select name from person", null);
-				
-				if(cur.getCount()>0){			
-					cur.moveToFirst();
-					do {
-						String res = cur.getString(0);	
-						mList.add(res);	
-					} while (cur.moveToNext());			
-				}
-				
-				
-				adapter = new ArrayAdapter<String>(context,android.R.layout.simple_list_item_1,mList);
-				mListview.setAdapter(adapter);
-				db.close();
-				
-				// จบดึงข้อมูลจาก DB		
-		
-		
+
+		// ส่วนดึงข้อมูลจาก DB
+		mList.clear();
+		db = context.openOrCreateDatabase("db.db",
+				SQLiteDatabase.OPEN_READWRITE, null);
+
+		db.setLocale(Locale.getDefault());
+		SQLiteCursor cur = (SQLiteCursor) db.rawQuery(
+				"select name from person", null);
+
+		if (cur.getCount() > 0) {
+			cur.moveToFirst();
+			do {
+				String res = cur.getString(0);
+				mList.add(res);
+			} while (cur.moveToNext());
+		}
+
+		adapter = new ArrayAdapter<String>(context,
+				android.R.layout.simple_list_item_1, mList);
+		mListview.setAdapter(adapter);
+		db.close();
+
+		// จบดึงข้อมูลจาก DB
+
 	}
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
+
 		int id = item.getItemId();
 
 		if (id == R.id.action_settings) {
 			return true;
 		}
 		if (id == R.id.action_init_db) {
+
+			return true;
+		}
+
+		if (id == R.id.action_export_db) {
+
+			String mPackage = getApplicationContext().getPackageName();
+			String DB_PATH = "/data/data/" + mPackage + "/databases/db.db";
+			String SD_CARD = "/mnt/sdcard/db_export.db";
+			OutputStream myOutput = null;
+			InputStream myInput = null;
+			try {
+				myInput = new FileInputStream(DB_PATH);
+				myOutput = new FileOutputStream(SD_CARD);
+				copyFile(myInput, myOutput);
+				Log.d(getPackageName(), "Export OK");
+				Toast.makeText(getApplicationContext(), "OK",
+						Toast.LENGTH_SHORT).show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 			return true;
 		}

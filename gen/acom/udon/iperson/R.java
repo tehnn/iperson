@@ -1644,6 +1644,7 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f090021;
         public static final int action_bar_title=0x7f090020;
         public static final int action_context_bar=0x7f090034;
+        public static final int action_export_db=0x7f090049;
         public static final int action_init_db=0x7f090048;
         public static final int action_menu_divider=0x7f090005;
         public static final int action_menu_presenter=0x7f090006;

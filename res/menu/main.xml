@@ -14,5 +14,12 @@
         android:orderInCategory="100"
         android:title="ตั้งค่า DB"
         app:showAsAction="never"/>
+     
+     
+      <item
+        android:id="@+id/action_export_db"
+        android:orderInCategory="100"
+        android:title="Export DB"
+        app:showAsAction="never"/>
 
 </menu>
